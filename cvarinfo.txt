@@ -1,5 +1,4 @@
-server bool  m8f_wm_PistolStart = true;
-
-server int   m8f_is_StartAmmoPercent = 100;
-
-server bool  m8f_is_StartWithBackpack = false;
+server bool   m8f_wm_PistolStart       = true;
+server int    m8f_is_StartAmmoPercent  = 100;
+server bool   m8f_is_StartWithBackpack = false;
+server string m8f_is_KeepWeapons       = "";
