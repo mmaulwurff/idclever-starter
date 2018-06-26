@@ -120,6 +120,14 @@ class PistolStartEventHandler : StaticEventHandler
     }
   }
 
+  void MaybeAddBackpack(PlayerPawn player)
+  {
+    bool startWithBackpack = CVar.FindCVar("m8f_is_StartWithBackpack").GetInt();
+    if (!startWithBackpack) { return; }
+
+    player.GiveInventoryType("BackpackItem");
+  }
+
   override void PlayerEntered(PlayerEvent e)
   {
     bool pistolStart = CVar.FindCVar("m8f_wm_PistolStart").GetInt();
@@ -129,5 +137,6 @@ class PistolStartEventHandler : StaticEventHandler
     ResetInventory(player);
     ResetWeapons(player);
     ResetAmmo(player);
+    MaybeAddBackpack(player);
   }
 }
