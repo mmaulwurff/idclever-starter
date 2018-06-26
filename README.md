@@ -1,4 +1,4 @@
-# IDCLEVer Starter
+# IDCLEVer Starter by m8f
 Universal mod for forced pistol starts.
 
 # Features

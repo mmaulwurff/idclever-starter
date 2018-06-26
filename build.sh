@@ -10,7 +10,7 @@ zip $name.pk3 \
     *.txt \
     *.md \
 && \
-cp $name.pk3 weapon-menu-$(git describe --abbrev=0 --tags).pk3 \
+cp $name.pk3 $name-$(git describe --abbrev=0 --tags).pk3 \
 && \
 gzdoom -glversion 3 -file \
        $name.pk3 \
