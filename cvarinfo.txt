@@ -1,0 +1,1 @@
+server bool m8f_wm_PistolStart = true;
