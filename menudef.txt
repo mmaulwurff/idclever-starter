@@ -1,0 +1,13 @@
+OptionMenu "m8f_is_Menu"
+{
+  Title "IDCLEVer Starter Options"
+
+  Option "Pistol Start", "m8f_wm_PistolStart", "OnOff"
+  TextField "Start ammo %", "m8f_is_StartAmmoPercent"
+}
+
+AddOptionMenu "OptionsMenu"
+{
+  StaticText ""
+  Submenu "IDCLEVer Starter Options", "m8f_is_Menu"
+}

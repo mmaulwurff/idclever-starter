@@ -1,1 +1,3 @@
-server bool m8f_wm_PistolStart = true;
+server bool  m8f_wm_PistolStart = true;
+
+server int   m8f_is_StartAmmoPercent = 100;
