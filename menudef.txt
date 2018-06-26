@@ -1,6 +1,8 @@
 OptionMenu "m8f_is_Menu"
 {
   Title "IDCLEVer Starter Options"
+  StaticText "Options take effeft on level start,", "Black"
+  StaticText "and only if Pistol Start is on.", "Black"
 
   StaticText ""
   Option "Pistol Start", "m8f_wm_PistolStart", "OnOff"
