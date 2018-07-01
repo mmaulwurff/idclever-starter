@@ -87,7 +87,6 @@ class PistolStartEventHandler : StaticEventHandler
     keepWeapons.Clear();
     string weaponsSerialized = CVar.FindCVar("m8f_is_KeepWeapons").GetString();
     int size = weaponsSerialized.length();
-    Console.Printf("Size: %d", size);
     string currentWeapon = "";
     for (int i = 0; i < size; ++i)
     {
