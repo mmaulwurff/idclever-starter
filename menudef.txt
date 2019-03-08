@@ -25,5 +25,12 @@ OptionMenu "m8f_is_Menu"
 AddOptionMenu "OptionsMenu"
 {
   StaticText ""
-  Submenu "IDCLEVer Starter Options", "m8f_is_Menu"
+  Submenu "IDCLEVer Starter Options" , "m8f_is_Menu"
+  SubMenu "Level Menu"               , "m8f_is_LevelsMenu"
+}
+
+OptionMenu "m8f_is_LevelsMenu"
+{
+  Class       "m8f_is_LevelsMenu"
+  Title       "Level Menu"
 }

@@ -1,0 +1,123 @@
+class m8f_is_LevelsMenu : OptionMenu
+{
+
+  // public: ///////////////////////////////////////////////////////////////////
+
+  override void Init(Menu parent, OptionMenuDescriptor desc)
+  {
+    reset(desc);
+
+    // Special maps
+    { // Test map
+      string mapName     = "Test Map";
+      string mapLumpName = "test";
+      bool   isFound     = addGoToMapItemIfFound(mapLumpName, mapName, desc);
+
+      if (isFound) { addEmptyLine(desc); }
+    }
+
+    // Doom 1 maps
+    for (int e = 0; e < 10; ++e)
+    {
+      bool found = false;
+
+      for (int i = 0; i < 10; ++i)
+      {
+        string code        = StringTable.Localize("$M8F_IS_EPISODE_CODE");
+        string mapName     = StringStruct.Format(code, e, i);
+        string mapLumpName = StringStruct.Format("E%dM%d", e, i);
+
+        found |= addGoToMapItemIfFound(mapLumpName, mapName, desc);
+      }
+
+      if (found) { addEmptyLine(desc); }
+    }
+
+    // Doom 2 maps
+    for (int i = 0; i < 100; ++i)
+    {
+      string mapName     = StringStruct.Format("$HUSTR_%d", i);
+      string mapLumpName = StringStruct.Format("MAP%02d", i);
+      addGoToMapItemIfFound(mapLumpName, mapName, desc);
+    }
+
+    super.Init(parent, desc);
+  }
+
+  // private: //////////////////////////////////////////////////////////////////
+
+  private void addEmptyLine(OptionMenuDescriptor desc)
+  {
+    let item = new("OptionMenuItemStaticText").Init("");
+    desc.mItems.push(item);
+  }
+
+  private bool addGoToMapItemIfFound(string mapLumpName, string mapName, OptionMenuDescriptor desc)
+  {
+    bool found = (Wads.FindLump(mapLumpName) != -1);
+
+    if (found)
+    {
+      let item = makeGoToMapItem(mapLumpName, mapName);
+      desc.mItems.push(item);
+    }
+
+    return found;
+  }
+
+  private OptionMenuItem makeGoToMapItem(string mapLumpName, string mapName)
+  {
+    string label;
+
+    if (mapName.CharAt(0) == "$")
+    {
+      string localized = StringTable.Localize(mapName);
+
+      if (mapName.indexOf(localized) == -1) // localized properly
+      {
+        label = StringStruct.Format("%s (%s)", localized, mapLumpName);
+      }
+      else // string not found
+      {
+        label = StringStruct.Format("(%s)", mapLumpName);
+      }
+    }
+    else
+    {
+      label = StringStruct.Format("%s (%s)", mapName, mapLumpName);
+    }
+
+    string currentMap = level.mapName;
+    if (currentMap.length() > 0 && currentMap == mapLumpName)
+    {
+      label.AppendFormat(" <<<");
+    }
+    else
+    {
+      label.AppendFormat("    ");
+    }
+
+    string command = StringStruct.Format("map %s", mapLumpName);
+    let    item    = new("OptionMenuItemSafeCommand").Init(label, command, warning);
+
+    return item;
+  }
+
+  void reset(OptionMenuDescriptor desc)
+  {
+    desc.mItems.clear();
+
+    desc.mItems.push(new("OptionMenuItemCommand"    ).Init("Back To Game"     , "closemenu"));
+
+    addEmptyLine(desc);
+    desc.mItems.push(new("OptionMenuItemSafeCommand").Init("Next Map"         , "nextmap", warning));
+    desc.mItems.push(new("OptionMenuItemSafeCommand").Init("Restart this Map" , "map *"  , warning));
+
+    addEmptyLine(desc);
+  }
+
+  // private: //////////////////////////////////////////////////////////////////
+
+  const warning = "Are you sure you want to go change level?\nYou'll lose all your weapons and ammo.";
+
+} // class m8f_is_LevelsMenu
