@@ -7,6 +7,10 @@ Universal mod for forced pistol starts.
 * an option to start with backpack;
 * a key to keep current weapon on new level.
 
+# Links
+* [Forum Thread](https://forum.zdoom.org/viewtopic.php?f=43&t=61079#p1060800)
+* [Git Repository](https://github.com/mmaulwurff/idclever-starter)
+
 # Credits
 * Code is based on [StrongholdEventHandler](https://github.com/Realm667/Re-Releases/blob/master/stronghold/zscript.txt) by Ed the Bat.
 * Thanks to namsan and Gorec for bug reports.
