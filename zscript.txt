@@ -27,11 +27,51 @@ version "3.2.0"
  * (https://github.com/Realm667/Re-Releases/blob/master/stronghold/zscript.txt)
  */
 
-class PistolStartEventHandler : StaticEventHandler
+class m8f_is_EventHandler : StaticEventHandler
 {
+
+  override void PlayerEntered(PlayerEvent e)
+  {
+    if (IsTitleMap()) { return; }
+
+    bool pistolStart = CVar.FindCVar("m8f_wm_PistolStart").GetInt();
+    if (!pistolStart) { return; }
+
+    let player = PlayerPawn(players[e.PlayerNumber].mo);
+    ResetInventory(player);
+    ResetWeapons(player);
+    ResetAmmo(player);
+    MaybeAddBackpack(player);
+  }
+
+  override Void NetworkProcess(ConsoleEvent e)
+  {
+    if(e.name == 'keep_this_weapon')
+    {
+      Weapon currentWeapon = players[e.player].ReadyWeapon;
+      if (currentWeapon == null) { return; }
+      string currentWeaponClass = currentWeapon.GetClassName();
+
+      CVar keepWeaponsCVar = CVar.FindCVar("m8f_is_KeepWeapons");
+      string keeped = keepWeaponsCVar.GetString();
+
+      keeped.AppendFormat("%s,", currentWeaponClass);
+      keepWeaponsCVar.SetString(keeped);
+
+      Console.Printf("%s will be kept on new level start.", currentWeapon.GetTag());
+    }
+    else if (e.name == "clear_keep_weapons")
+    {
+      CVar.FindCVar("m8f_is_KeepWeapons").SetString("");
+      Console.Printf("Weapon keep list is cleared.");
+    }
+  }
+
+  // private: //////////////////////////////////////////////////////////////////
+
   /** resets health, armor, and droppable inventory items
    */
-  void ResetInventory(PlayerPawn player)
+  private void ResetInventory(PlayerPawn player)
   {
     // reset health and armor
     player.A_SetHealth(player.GetSpawnHealth());
@@ -80,9 +120,7 @@ class PistolStartEventHandler : StaticEventHandler
     }
   }
 
-  Array<string> keepWeapons;
-
-  void GetKeepWeapons()
+  private void GetKeepWeapons()
   {
     keepWeapons.Clear();
     string weaponsSerialized = CVar.FindCVar("m8f_is_KeepWeapons").GetString();
@@ -100,7 +138,7 @@ class PistolStartEventHandler : StaticEventHandler
     }
   }
 
-  bool WeaponIsInKeepList(string weaponClass)
+  private bool WeaponIsInKeepList(string weaponClass)
   {
     int size = keepWeapons.size();
     for (int i = 0; i < size; ++i)
@@ -113,7 +151,7 @@ class PistolStartEventHandler : StaticEventHandler
   /** resets weapons, even if they are undroppable
    * ammo should be reset after resetting weapons.
    */
-  void ResetWeapons(PlayerPawn player)
+  private void ResetWeapons(PlayerPawn player)
   {
     DropItem drop = player.GetDropItems();
 
@@ -166,7 +204,7 @@ class PistolStartEventHandler : StaticEventHandler
     }
   }
 
-  void ResetAmmo(PlayerPawn player)
+  private void ResetAmmo(PlayerPawn player)
   {
     DropItem drop = player.GetDropItems();
 
@@ -201,7 +239,7 @@ class PistolStartEventHandler : StaticEventHandler
     }
   }
 
-  void MaybeAddBackpack(PlayerPawn player)
+  private void MaybeAddBackpack(PlayerPawn player)
   {
     bool startWithBackpack = CVar.FindCVar("m8f_is_StartWithBackpack").GetInt();
     if (!startWithBackpack) { return; }
@@ -209,38 +247,14 @@ class PistolStartEventHandler : StaticEventHandler
     player.GiveInventoryType("BackpackItem");
   }
 
-  override void PlayerEntered(PlayerEvent e)
+  private static bool IsTitlemap()
   {
-    bool pistolStart = CVar.FindCVar("m8f_wm_PistolStart").GetInt();
-    if (!pistolStart) { return; }
-
-    let player = PlayerPawn(players[e.PlayerNumber].mo);
-    ResetInventory(player);
-    ResetWeapons(player);
-    ResetAmmo(player);
-    MaybeAddBackpack(player);
+    bool isTitlemap = (level.mapname == "TITLEMAP");
+    return isTitlemap;
   }
 
-  Override Void NetworkProcess(ConsoleEvent e)
-  {
-    if(e.name == 'keep_this_weapon')
-    {
-      Weapon currentWeapon = players[e.player].ReadyWeapon;
-      if (currentWeapon == null) { return; }
-      string currentWeaponClass = currentWeapon.GetClassName();
+  // private: //////////////////////////////////////////////////////////////////
 
-      CVar keepWeaponsCVar = CVar.FindCVar("m8f_is_KeepWeapons");
-      string keeped = keepWeaponsCVar.GetString();
+  private Array<string> keepWeapons;
 
-      keeped.AppendFormat("%s,", currentWeaponClass);
-      keepWeaponsCVar.SetString(keeped);
-
-      Console.Printf("%s will be kept on new level start.", currentWeapon.GetTag());
-    }
-    else if (e.name == "clear_keep_weapons")
-    {
-      CVar.FindCVar("m8f_is_KeepWeapons").SetString("");
-      Console.Printf("Weapon keep list is cleared.");
-    }
-  }
-}
+} // class m8f_is_EventHandler

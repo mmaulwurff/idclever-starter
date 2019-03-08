@@ -1,4 +1,6 @@
 gameinfo
 {
-  AddEventHandlers = "PistolStartEventHandler"
-}
+
+  AddEventHandlers = "m8f_is_EventHandler"
+
+} // gameinfo
