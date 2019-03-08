@@ -14,6 +14,7 @@ git log --date=short --pretty=format:"-%d %ad %s%n" | \
     > changelog.txt \
 && \
 zip $name.pk3 \
+    zscript/*.txt \
     *.txt \
     *.md \
 && \

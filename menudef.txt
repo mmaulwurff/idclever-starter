@@ -1,17 +1,23 @@
 OptionMenu "m8f_is_Menu"
 {
-  Title "IDCLEVer Starter Options"
-  StaticText "Options take effect on level start,", "Black"
-  StaticText "and only if Pistol Start is on.", "Black"
+  Title      "IDCLEVer Starter Options"
+
+  StaticText "Options take effect on level start," , "Black"
+  StaticText "and only if Pistol Start is on."     , "Black"
 
   StaticText ""
-  Option "Pistol Start", "m8f_wm_PistolStart", "OnOff"
+  Option     "Pistol Start", "m8f_wm_PistolStart", "OnOff"
 
   StaticText ""
-  TextField "Start ammo %", "m8f_is_StartAmmoPercent"
+  TextField  "Start ammo %", "m8f_is_StartAmmoPercent"
 
   StaticText ""
-  Option "Start with backpack", "m8f_is_StartWithBackpack", "OnOff"
+  Option     "Start with backpack", "m8f_is_StartWithBackpack", "OnOff"
+
+  StaticText ""
+  StaticText "Commands", 1
+  Control    "Keep this weapon"        , "m8f_keep_this_weapon"
+  Control    "Clear kept weapons list" , "m8f_clear_keep_weapons"
 
   StaticText ""
 }

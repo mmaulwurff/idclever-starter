@@ -1,8 +1,7 @@
-AddKeySection "IDClEVer Starter" idcleverstarter
-
 alias m8f_keep_this_weapon   "netevent keep_this_weapon"
 alias m8f_clear_keep_weapons "netevent clear_keep_weapons"
 
+AddKeySection "IDClEVer Starter" idcleverstarter
 
 AddMenuKey "Keep this weapon"        m8f_keep_this_weapon
 AddMenuKey "Clear kept weapons list" m8f_clear_keep_weapons

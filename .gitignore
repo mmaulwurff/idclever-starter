@@ -6,3 +6,7 @@ changelog.txt
 !*.md
 !*.sh
 !.gitignore
+
+!zscript
+zscript/*
+!zscript/*.txt
