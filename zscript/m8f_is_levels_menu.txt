@@ -134,7 +134,6 @@ class m8f_is_LevelsMenu : OptionMenu
 
   private void addInGameOptions(OptionMenuDescriptor desc)
   {
-    addEmptyLine(desc);
     desc.mItems.push(new("OptionMenuItemCommand"    ).Init("Back To Game"     , "closemenu"));
     addEmptyLine(desc);
     desc.mItems.push(new("OptionMenuItemSafeCommand").Init(nextLabel    , "nextmap", warning));
@@ -149,14 +148,13 @@ class m8f_is_LevelsMenu : OptionMenu
       string mapName     = "Test Map";
       string mapLumpName = "TEST";
       bool   isFound     = addGoToMapItemIfFound(mapLumpName, mapName, currentMap, desc);
-
-      if (isFound) { addEmptyLine(desc); }
     }
 
     string game = StringTable.Localize("$M8F_IS_GAME");
 
     if (game == "DOOM1")
     {
+      addEmptyLine(desc);
       addDoom1Maps(desc, currentMap);
     }
 
@@ -166,6 +164,7 @@ class m8f_is_LevelsMenu : OptionMenu
       addDoom2Maps(desc, currentMap, replacementFound);
     }
 
+      addEmptyLine(desc);
   }
 
   private void addDoom1Maps(OptionMenuDescriptor desc, string currentMap)
@@ -200,6 +199,8 @@ class m8f_is_LevelsMenu : OptionMenu
         int num = Wads.CheckNumForName(mapLumpName, Wads.ns_global);
         if (num <= maxNum) { continue; }
       }
+
+      if (i % 10 == 1) { addEmptyLine(desc); }
 
       string code    = StringTable.Localize("$M8F_IS_EPISODE_CODE");
       string mapName = StringStruct.Format(code, i);
