@@ -1,0 +1,4 @@
+[enu default]
+
+M8F_IS_GAME         = "DOOM2";
+M8F_IS_EPISODE_CODE = "$TXT_HEXEN_MAP%.2d";

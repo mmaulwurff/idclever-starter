@@ -201,7 +201,8 @@ class m8f_is_LevelsMenu : OptionMenu
         if (num <= maxNum) { continue; }
       }
 
-      string mapName = StringStruct.Format("$HUSTR_%d", i);
+      string code    = StringTable.Localize("$M8F_IS_EPISODE_CODE");
+      string mapName = StringStruct.Format(code, i);
       addGoToMapItemIfFound(mapLumpName, mapName, currentMap, desc);
     }
   }

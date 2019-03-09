@@ -1,0 +1,4 @@
+[enu default]
+
+M8F_IS_GAME         = "DOOM1";
+M8F_IS_EPISODE_CODE = "$HHUSTR_E%dM%d";

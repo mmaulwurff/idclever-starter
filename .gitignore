@@ -10,3 +10,9 @@ changelog.txt
 !zscript
 zscript/*
 !zscript/*.txt
+
+!filter/
+filter/*
+!filter/*/
+filter/*/*
+!filter/*/*.enu
