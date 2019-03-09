@@ -9,6 +9,9 @@ class m8f_is_LevelsMenu : OptionMenu
 
     setup(desc, level.mapName);
 
+    bool isInGame = (gamestate == GS_LEVEL);
+    if (isInGame) { addInGameOptions(desc); }
+
     super.Init(parent, desc);
   }
 
@@ -49,8 +52,9 @@ class m8f_is_LevelsMenu : OptionMenu
             mapName = label.Mid(leftP + 1, rightP - leftP - 1);
           }
 
-            console.printf(mapName);
           setup(mDesc, mapName);
+
+          addInGameOptions(mDesc);
         }
         return true;
       }
@@ -70,7 +74,8 @@ class m8f_is_LevelsMenu : OptionMenu
   private bool addGoToMapItemIfFound( string mapLumpName
                                     , string mapName
                                     , string currentMap
-                                    , OptionMenuDescriptor desc)
+                                    , OptionMenuDescriptor desc
+                                    )
   {
     bool found = (Wads.FindLump(mapLumpName) != -1);
 
@@ -105,14 +110,13 @@ class m8f_is_LevelsMenu : OptionMenu
       label = StringStruct.Format("%s (%s)", mapName, mapLumpName);
     }
 
-            console.printf(mapLumpName);
     if (currentMap.length() > 0 && currentMap == mapLumpName)
     {
-      label.AppendFormat(" <<<");
+      label.AppendFormat(" <");
     }
     else
     {
-      label.AppendFormat("    ");
+      label.AppendFormat("  ");
     }
 
     string command = StringStruct.Format("map %s", mapLumpName);
@@ -124,13 +128,15 @@ class m8f_is_LevelsMenu : OptionMenu
   private void reset(OptionMenuDescriptor desc)
   {
     desc.mItems.clear();
+  }
 
+  private void addInGameOptions(OptionMenuDescriptor desc)
+  {
+    addEmptyLine(desc);
     desc.mItems.push(new("OptionMenuItemCommand"    ).Init("Back To Game"     , "closemenu"));
-
     addEmptyLine(desc);
     desc.mItems.push(new("OptionMenuItemSafeCommand").Init(nextLabel    , "nextmap", warning));
     desc.mItems.push(new("OptionMenuItemSafeCommand").Init(restartLabel , "map *"  , warning));
-
     addEmptyLine(desc);
   }
 
@@ -145,7 +151,23 @@ class m8f_is_LevelsMenu : OptionMenu
       if (isFound) { addEmptyLine(desc); }
     }
 
-    // Doom 1 maps
+    string game = StringTable.Localize("$M8F_IS_GAME");
+
+    if (game == "DOOM1")
+    {
+      addDoom1Maps(desc, currentMap);
+    }
+
+    else if (game == "DOOM2")
+    {
+      bool replacementFound = isDoom2MapsReplaced();
+      addDoom2Maps(desc, currentMap, replacementFound);
+    }
+
+  }
+
+  private void addDoom1Maps(OptionMenuDescriptor desc, string currentMap)
+  {
     for (int e = 0; e < 10; ++e)
     {
       bool found = false;
@@ -161,14 +183,40 @@ class m8f_is_LevelsMenu : OptionMenu
 
       if (found) { addEmptyLine(desc); }
     }
+  }
 
-    // Doom 2 maps
+  private void addDoom2Maps(OptionMenuDescriptor desc, string currentMap, bool replacementFound)
+  {
+    int maxNum = StringTable.Localize("$M8F_IS_ORIG_MAPS_END").ToInt();
+
     for (int i = 0; i < 100; ++i)
     {
-      string mapName     = StringStruct.Format("$HUSTR_%d", i);
       string mapLumpName = StringStruct.Format("MAP%02d", i);
+
+      if (replacementFound)
+      {
+        int num = Wads.CheckNumForName(mapLumpName, Wads.ns_global);
+        if (num <= maxNum) { continue; }
+      }
+
+      string mapName = StringStruct.Format("$HUSTR_%d", i);
       addGoToMapItemIfFound(mapLumpName, mapName, currentMap, desc);
     }
+  }
+
+  private bool isDoom2MapsReplaced()
+  {
+    int maxNum = StringTable.Localize("$M8F_IS_ORIG_MAPS_END").ToInt();
+
+    for (int i = 0; i < 100; ++i)
+    {
+      string mapLumpName = StringStruct.Format("MAP%02d", i);
+      int    num         = Wads.CheckNumForName(mapLumpName, Wads.ns_global);
+
+      if (num > maxNum) { return true; }
+    }
+
+    return false;
   }
 
   // private: //////////////////////////////////////////////////////////////////
