@@ -1,5 +1,8 @@
 #!/bin/bash
 
+gzdoom=gzdoom
+#gzdoom=~/Documents/src/gzdoom-build/gzdoom
+
 name=idclever-starter
 #iwad=~/Programs/Games/wads/doom/DOOM.WAD
 #iwad=~/Programs/Games/wads/doom/HERETIC.WAD
@@ -25,8 +28,6 @@ zip $name.pk3 \
 && \
 cp $name.pk3 $name-$(git describe --abbrev=0 --tags).pk3 \
 && \
-gzdoom -iwad $iwad \
-       -file\
-       $name.pk3 \
-       ~/Programs/Games/wads/maps/DOOMTEST.wad \
-       "$1" "$2" \
+$gzdoom -iwad $iwad \
+        -file $name.pk3 "$1" "$2" \
+        ~/Programs/Games/wads/maps/DOOMTEST.wad \
