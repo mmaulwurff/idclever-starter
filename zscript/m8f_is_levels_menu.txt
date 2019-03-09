@@ -7,7 +7,9 @@ class m8f_is_LevelsMenu : OptionMenu
   {
     reset(desc);
 
-    setup(desc, level.mapName);
+    string currentMapName = level.mapName;
+    currentMapName.toUpper();
+    setup(desc, currentMapName);
 
     bool isInGame = (gamestate == GS_LEVEL);
     if (isInGame) { addInGameOptions(desc); }
