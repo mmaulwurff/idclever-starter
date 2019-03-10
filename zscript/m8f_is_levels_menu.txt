@@ -127,9 +127,9 @@ class m8f_is_LevelsMenu : OptionMenu
       label = String.Format("%s (%s)", mapName, mapLumpName);
     }
 
-    if (currentMap.length() > 0 && currentMap == mapLumpName)
+    if (currentMap.length() > 0 && isEqualIgnoreCase(currentMap, mapLumpName))
     {
-      label.AppendFormat(" <");
+      label.AppendFormat(" *");
     }
     else
     {
@@ -309,6 +309,16 @@ class m8f_is_LevelsMenu : OptionMenu
     bool isKeepInventory = CVar.GetCvar("m8f_is_level_menu_keep").GetBool();
 
     return isKeepInventory;
+  }
+
+  private bool isEqualIgnoreCase(string str1, string str2)
+  {
+    str1.toUpper();
+    str2.toUpper();
+
+    bool isEqual = (str1 == str2);
+
+    return isEqual;
   }
 
   // private: //////////////////////////////////////////////////////////////////
