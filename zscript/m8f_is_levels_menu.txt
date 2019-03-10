@@ -57,6 +57,12 @@ class m8f_is_LevelsMenu : OptionMenu
           setup(mDesc, mapName);
 
           addInGameOptions(mDesc);
+
+          if (isKeepInventory())
+          {
+            let inhibitCVar = CVar.GetCVar("m8f_is_inhibit");
+            inhibitCVar.SetBool(true);
+          }
         }
         return true;
       }
@@ -123,8 +129,12 @@ class m8f_is_LevelsMenu : OptionMenu
       label.AppendFormat("  ");
     }
 
-    string     command = String.Format("map %s", mapLumpName);
-    bool       isSafe  = CVar.GetCVar("m8f_is_safe_level_menu_commands").GetInt();
+    bool   isInGame = (gamestate == GS_LEVEL);
+    string command  = (isKeepInventory() && isInGame)
+                    ? String.Format("changemap %s", mapLumpName)
+                    : String.Format("map %s"      , mapLumpName);
+
+    bool isSafe = CVar.GetCVar("m8f_is_safe_level_menu_commands").GetInt();
 
     OptionMenuItem item;
     if (isSafe)
@@ -285,6 +295,13 @@ class m8f_is_LevelsMenu : OptionMenu
     bool   isHarmony = (map03Name == "03: OWT MOOD");
 
     return isHarmony;
+  }
+
+  private bool isKeepInventory()
+  {
+    bool isKeepInventory = CVar.GetCvar("m8f_is_level_menu_keep").GetBool();
+
+    return isKeepInventory;
   }
 
   // private: //////////////////////////////////////////////////////////////////

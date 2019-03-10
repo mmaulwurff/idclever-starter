@@ -14,6 +14,13 @@ class m8f_is_EventHandler : StaticEventHandler
 
     if (!settings.isEnabled) { return; }
 
+    let inhibitCVar = CVar.GetCVar("m8f_is_inhibit");
+    if (inhibitCVar.GetBool())
+    {
+      inhibitCVar.SetBool(false);
+      return;
+    }
+
     let playerPawn = PlayerPawn(players[e.PlayerNumber].mo);
     ResetInventory  (playerPawn);
     ResetWeapons    (playerPawn);

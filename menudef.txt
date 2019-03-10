@@ -21,7 +21,8 @@ OptionMenu "m8f_is_Menu"
 
   StaticText ""
   StaticText "Level Menu", 1
-  Option     "Level change prompt", "m8f_is_safe_level_menu_commands", "OnOff"
+  Option     "Level change prompt" , "m8f_is_safe_level_menu_commands" , "OnOff"
+  Option     "Keep inventory"      , "m8f_is_level_menu_keep"          , "OnOff"
 
   StaticText ""
 }
