@@ -23,12 +23,12 @@ class m8f_is_LevelsMenu : OptionMenu
     {
       if (mDesc.mSelectedItem >= 0 && mDesc.mItems[mDesc.mSelectedItem].Activate())
       {
-        let safeCommandItem = OptionMenuItemSafeCommand(mDesc.mItems[mDesc.mSelectedItem]);
-        if (safeCommandItem)
+        let commandItem = OptionMenuItemCommand(mDesc.mItems[mDesc.mSelectedItem]);
+        if (commandItem)
         {
           reset(mDesc);
 
-          string label = safeCommandItem.mLabel;
+          string label = commandItem.mLabel;
           string mapName;
 
           if (label == restartLabel)
@@ -123,8 +123,18 @@ class m8f_is_LevelsMenu : OptionMenu
       label.AppendFormat("  ");
     }
 
-    string command = String.Format("map %s", mapLumpName);
-    let    item    = new("OptionMenuItemSafeCommand").Init(label, command, warning);
+    string     command = String.Format("map %s", mapLumpName);
+    bool       isSafe  = CVar.GetCVar("m8f_is_safe_level_menu_commands").GetInt();
+
+    OptionMenuItem item;
+    if (isSafe)
+    {
+      item = new("OptionMenuItemSafeCommand").Init(label, command, warning);
+    }
+    else
+    {
+      item = new("OptionMenuItemCommand").Init(label, command);
+    }
 
     return item;
   }

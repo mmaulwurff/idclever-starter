@@ -20,6 +20,10 @@ OptionMenu "m8f_is_Menu"
   Control    "Clear kept weapons list" , "m8f_clear_keep_weapons"
 
   StaticText ""
+  StaticText "Level Menu", 1
+  Option     "Level change prompt", "m8f_is_safe_level_menu_commands", "OnOff"
+
+  StaticText ""
 }
 
 AddOptionMenu "OptionsMenu"
