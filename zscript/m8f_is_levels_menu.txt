@@ -75,6 +75,13 @@ class m8f_is_LevelsMenu : OptionMenu
 
   private void addEmptyLine(OptionMenuDescriptor desc)
   {
+    int nItems = desc.mItems.size();
+    if (nItems > 0)
+    {
+      let staticText = OptionMenuItemStaticText(desc.mItems[nItems - 1]);
+      if (staticText != null && staticText.mLabel == "") { return; }
+    }
+
     let item = new("OptionMenuItemStaticText").Init("");
     desc.mItems.push(item);
   }
