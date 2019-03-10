@@ -74,12 +74,14 @@ class m8f_is_LevelsMenu : OptionMenu
   }
 
   private bool addGoToMapItemIfFound( string mapLumpName
+                                    , string fullName
                                     , string mapName
                                     , string currentMap
                                     , OptionMenuDescriptor desc
                                     )
   {
-    bool found = (Wads.FindLump(mapLumpName) != -1);
+    bool found = (Wads.CheckNumForFullName(fullName) != -1)
+              || (Wads.FindLump(mapLumpName) != -1);
 
     if (found)
     {
@@ -147,10 +149,12 @@ class m8f_is_LevelsMenu : OptionMenu
     { // Test map
       string mapName     = "Test Map";
       string mapLumpName = "TEST";
-      bool   isFound     = addGoToMapItemIfFound(mapLumpName, mapName, currentMap, desc);
+      bool   isFound     = addGoToMapItemIfFound(mapLumpName, "", mapName, currentMap, desc);
     }
 
     string game = StringTable.Localize("$M8F_IS_GAME");
+
+    addSquareMaps(desc, currentMap);
 
     if (game == "DOOM1")
     {
@@ -164,22 +168,52 @@ class m8f_is_LevelsMenu : OptionMenu
       addDoom2Maps(desc, currentMap, replacementFound);
     }
 
-      addEmptyLine(desc);
+    addEmptyLine(desc);
+  }
+
+  private void addSquareMaps(OptionMenuDescriptor desc, string currentMap)
+  {
+    string nameCode     = "$SQHUSTR_E%dA%d";
+    string lumpCode     = "e%da%d";
+    string fullNameCode = "maps/e%da%d.wad";
+
+    addEpisodicMaps(desc, currentMap, nameCode, fullNameCode, lumpCode);
+
+    addEmptyLine(desc);
+    { // Time attack
+      string mapName     = "Time Attack Mode";
+      string mapLumpName = "dm01";
+      string fullName    = "maps/dm01.wad";
+      bool   isFound     = addGoToMapItemIfFound(mapLumpName, fullName, mapName, currentMap, desc);
+    }
   }
 
   private void addDoom1Maps(OptionMenuDescriptor desc, string currentMap)
+  {
+    string nameCode = StringTable.Localize("$M8F_IS_EPISODE_CODE");
+    string lumpCode = "E%dM%d";
+
+    addEpisodicMaps(desc, currentMap, nameCode, nameCode, lumpCode);
+  }
+
+  private void addEpisodicMaps( OptionMenuDescriptor desc
+                              , string currentMap
+                              , string nameCode
+                              , string fullNameCode
+                              , string lumpCode
+                              )
   {
     for (int e = 0; e < 10; ++e)
     {
       bool found = false;
 
-      for (int i = 0; i < 10; ++i)
+      for (int i = 0; i < 99; ++i)
       {
-        string code        = StringTable.Localize("$M8F_IS_EPISODE_CODE");
-        string mapName     = String.Format(code, e, i);
-        string mapLumpName = String.Format("E%dM%d", e, i);
+        string mapName     = String.Format(nameCode,     e, i);
+        string mapLumpName = String.Format(lumpCode,     e, i);
+        string fullName    = String.Format(fullNameCode, e, i);
 
-        found |= addGoToMapItemIfFound(mapLumpName, mapName, currentMap, desc);
+        found |= addGoToMapItemIfFound(mapLumpName, fullName, mapName, currentMap, desc);
       }
 
       if (found) { addEmptyLine(desc); }
@@ -204,7 +238,7 @@ class m8f_is_LevelsMenu : OptionMenu
 
       string code    = StringTable.Localize("$M8F_IS_EPISODE_CODE");
       string mapName = String.Format(code, i);
-      addGoToMapItemIfFound(mapLumpName, mapName, currentMap, desc);
+      addGoToMapItemIfFound(mapLumpName, mapLumpName, mapName, currentMap, desc);
     }
   }
 

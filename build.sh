@@ -8,6 +8,8 @@ name=idclever-starter
 #iwad=~/Programs/Games/wads/doom/HERETIC.WAD
 #iwad=~/Programs/Games/wads/modules/game/chex3.wad
 #iwad=~/Programs/Games/wads/doom/HEXEN.WAD
+#iwad=~/Programs/Games/wads/doom/freedoom1.wad
+#iwad=~/Programs/Games/wads/modules/game/square1.pk3
 
 rm -f $name.pk3 \
 && \
@@ -31,3 +33,5 @@ cp $name.pk3 $name-$(git describe --abbrev=0 --tags).pk3 \
 $gzdoom -iwad $iwad \
         -file $name.pk3 "$1" "$2" \
         ~/Programs/Games/wads/maps/DOOMTEST.wad \
+        +openmenu m8f_is_LevelsMenu \
+        #-norun
