@@ -18,6 +18,7 @@ OptionMenu "m8f_is_Menu"
   StaticText "Commands", 1
   Control    "Keep this weapon"        , "m8f_keep_this_weapon"
   Control    "Clear kept weapons list" , "m8f_clear_keep_weapons"
+  Control    "Open Level Menu"         , "m8f_open_level_menu"
 
   StaticText ""
   StaticText "Level Menu", 1
