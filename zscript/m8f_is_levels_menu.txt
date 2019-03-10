@@ -100,16 +100,16 @@ class m8f_is_LevelsMenu : OptionMenu
 
       if (mapName.indexOf(localized) == -1) // localized properly
       {
-        label = StringStruct.Format("%s (%s)", localized, mapLumpName);
+        label = String.Format("%s (%s)", localized, mapLumpName);
       }
       else // string not found
       {
-        label = StringStruct.Format("(%s)", mapLumpName);
+        label = String.Format("(%s)", mapLumpName);
       }
     }
     else
     {
-      label = StringStruct.Format("%s (%s)", mapName, mapLumpName);
+      label = String.Format("%s (%s)", mapName, mapLumpName);
     }
 
     if (currentMap.length() > 0 && currentMap == mapLumpName)
@@ -121,7 +121,7 @@ class m8f_is_LevelsMenu : OptionMenu
       label.AppendFormat("  ");
     }
 
-    string command = StringStruct.Format("map %s", mapLumpName);
+    string command = String.Format("map %s", mapLumpName);
     let    item    = new("OptionMenuItemSafeCommand").Init(label, command, warning);
 
     return item;
@@ -176,8 +176,8 @@ class m8f_is_LevelsMenu : OptionMenu
       for (int i = 0; i < 10; ++i)
       {
         string code        = StringTable.Localize("$M8F_IS_EPISODE_CODE");
-        string mapName     = StringStruct.Format(code, e, i);
-        string mapLumpName = StringStruct.Format("E%dM%d", e, i);
+        string mapName     = String.Format(code, e, i);
+        string mapLumpName = String.Format("E%dM%d", e, i);
 
         found |= addGoToMapItemIfFound(mapLumpName, mapName, currentMap, desc);
       }
@@ -192,7 +192,7 @@ class m8f_is_LevelsMenu : OptionMenu
 
     for (int i = 0; i < 100; ++i)
     {
-      string mapLumpName = StringStruct.Format("MAP%02d", i);
+      string mapLumpName = String.Format("MAP%02d", i);
 
       if (replacementFound)
       {
@@ -203,7 +203,7 @@ class m8f_is_LevelsMenu : OptionMenu
       if (i % 10 == 1) { addEmptyLine(desc); }
 
       string code    = StringTable.Localize("$M8F_IS_EPISODE_CODE");
-      string mapName = StringStruct.Format(code, i);
+      string mapName = String.Format(code, i);
       addGoToMapItemIfFound(mapLumpName, mapName, currentMap, desc);
     }
   }
@@ -214,7 +214,7 @@ class m8f_is_LevelsMenu : OptionMenu
 
     for (int i = 0; i < 100; ++i)
     {
-      string mapLumpName = StringStruct.Format("MAP%02d", i);
+      string mapLumpName = String.Format("MAP%02d", i);
       int    num         = Wads.CheckNumForName(mapLumpName, Wads.ns_global);
 
       if (num > maxNum) { return true; }
