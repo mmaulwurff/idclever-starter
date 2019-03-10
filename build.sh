@@ -10,6 +10,7 @@ name=idclever-starter
 #iwad=~/Programs/Games/wads/doom/HEXEN.WAD
 #iwad=~/Programs/Games/wads/doom/freedoom1.wad
 #iwad=~/Programs/Games/wads/modules/game/square1.pk3
+iwad=~/Programs/Games/wads/modules/game/harm1.wad
 
 rm -f $name.pk3 \
 && \

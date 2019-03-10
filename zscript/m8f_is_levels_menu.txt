@@ -156,7 +156,14 @@ class m8f_is_LevelsMenu : OptionMenu
 
     addSquareMaps(desc, currentMap);
 
-    if (game == "DOOM1")
+    if (isHarmony())
+    {
+      bool   replacementFound = isDoom2MapsReplaced();
+      string episodeCode      = "$HUSTR_%d";
+      addDoom2Maps(desc, currentMap, replacementFound, episodeCode);
+    }
+
+    else if (game == "DOOM1")
     {
       addEmptyLine(desc);
       addDoom1Maps(desc, currentMap);
@@ -164,8 +171,9 @@ class m8f_is_LevelsMenu : OptionMenu
 
     else if (game == "DOOM2")
     {
-      bool replacementFound = isDoom2MapsReplaced();
-      addDoom2Maps(desc, currentMap, replacementFound);
+      bool   replacementFound = isDoom2MapsReplaced();
+      string episodeCode      = StringTable.Localize("$M8F_IS_EPISODE_CODE");
+      addDoom2Maps(desc, currentMap, replacementFound, episodeCode);
     }
 
     addEmptyLine(desc);
@@ -220,7 +228,11 @@ class m8f_is_LevelsMenu : OptionMenu
     }
   }
 
-  private void addDoom2Maps(OptionMenuDescriptor desc, string currentMap, bool replacementFound)
+  private void addDoom2Maps( OptionMenuDescriptor desc
+                           , string currentMap
+                           , bool   replacementFound
+                           , string episodeCode
+                           )
   {
     int maxNum = StringTable.Localize("$M8F_IS_ORIG_MAPS_END").ToInt();
 
@@ -236,8 +248,7 @@ class m8f_is_LevelsMenu : OptionMenu
 
       if (i % 10 == 1) { addEmptyLine(desc); }
 
-      string code    = StringTable.Localize("$M8F_IS_EPISODE_CODE");
-      string mapName = String.Format(code, i);
+      string mapName = String.Format(episodeCode, i);
       addGoToMapItemIfFound(mapLumpName, mapLumpName, mapName, currentMap, desc);
     }
   }
@@ -255,6 +266,15 @@ class m8f_is_LevelsMenu : OptionMenu
     }
 
     return false;
+  }
+
+  private bool isHarmony()
+  {
+    string map03Name = StringTable.Localize("$HUSTR_3");
+    map03Name.toUpper();
+    bool   isHarmony = (map03Name == "03: OWT MOOD");
+
+    return isHarmony;
   }
 
   // private: //////////////////////////////////////////////////////////////////
