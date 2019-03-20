@@ -23,7 +23,7 @@ version "3.2.0"
  * SOFTWARE.
  */
 
-#include "zscript/m8f_is_settings.txt"
-#include "zscript/m8f_is_event_handler.txt"
+#include "zscript/m8f_is_settings.zs"
+#include "zscript/m8f_is_event_handler.zs"
 
-#include "zscript/m8f_is_levels_menu.txt"
+#include "zscript/m8f_is_levels_menu.zs"

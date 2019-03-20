@@ -5,11 +5,12 @@ changelog.txt
 
 !*.md
 !*.sh
+!*.zs
 !.gitignore
 
 !zscript
 zscript/*
-!zscript/*.txt
+!zscript/*.zs
 
 !filter/
 filter/*

@@ -25,8 +25,9 @@ git log --date=short --pretty=format:"-%d %ad %s%n" | \
 && \
 zip $name.pk3 \
     filter/*/*.enu \
-    zscript/*.txt \
+    zscript/*.zs \
     *.txt \
+    *.zs \
     *.md \
     language.enu \
 && \
