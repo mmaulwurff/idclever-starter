@@ -86,6 +86,12 @@ class m8f_is_LevelsMenu : OptionMenu
     desc.mItems.push(item);
   }
 
+  private void addStaticText(OptionMenuDescriptor desc, string label)
+  {
+    let item = new("OptionMenuItemStaticText").Init(label);
+    desc.mItems.push(item);
+  }
+
   private bool addGoToMapItemIfFound( string mapLumpName
                                     , string fullName
                                     , string mapName
@@ -141,10 +147,8 @@ class m8f_is_LevelsMenu : OptionMenu
                     ? String.Format("changemap %s", mapLumpName)
                     : String.Format("map %s"      , mapLumpName);
 
-    bool isSafe = CVar.GetCVar("m8f_is_safe_level_menu_commands").GetInt();
-
     OptionMenuItem item;
-    if (isSafe)
+    if (isSafe())
     {
       item = new("OptionMenuItemSafeCommand").Init(label, command, warning);
     }
@@ -165,8 +169,34 @@ class m8f_is_LevelsMenu : OptionMenu
   {
     desc.mItems.push(new("OptionMenuItemCommand"    ).Init("Back To Game"     , "closemenu"));
     addEmptyLine(desc);
-    desc.mItems.push(new("OptionMenuItemSafeCommand").Init(nextLabel    , "nextmap", warning));
-    desc.mItems.push(new("OptionMenuItemSafeCommand").Init(restartLabel , "map *"  , warning));
+
+    if (isSafe())
+    {
+      desc.mItems.push(new("OptionMenuItemSafeCommand").Init(nextLabel , "nextmap", warning));
+    }
+    else
+    {
+      desc.mItems.push(new("OptionMenuItemCommand").Init(nextLabel, "nextmap"));
+    }
+    if (isKeepInventory())
+    {
+      addStaticText(desc, "Inventory cannot be kept with next map command.");
+      addEmptyLine(desc);
+    }
+
+    string command  = isKeepInventory()
+                    ? String.Format("changemap *")
+                    : String.Format("map *");
+
+    if (isSafe())
+    {
+      desc.mItems.push(new("OptionMenuItemSafeCommand").Init(restartLabel, command , warning));
+    }
+    else
+    {
+      desc.mItems.push(new("OptionMenuItemCommand").Init(restartLabel, command));
+    }
+
     addEmptyLine(desc);
   }
 
@@ -319,6 +349,13 @@ class m8f_is_LevelsMenu : OptionMenu
     bool isEqual = (str1 == str2);
 
     return isEqual;
+  }
+
+  private bool isSafe()
+  {
+    bool isSafe = CVar.GetCVar("m8f_is_safe_level_menu_commands").GetBool();
+
+    return isSafe;
   }
 
   // private: //////////////////////////////////////////////////////////////////

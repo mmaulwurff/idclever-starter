@@ -34,5 +34,6 @@ cp $name.pk3 $name-$(git describe --abbrev=0 --tags).pk3 \
 $gzdoom -iwad $iwad \
         -file $name.pk3 "$1" "$2" \
         ~/Programs/Games/wads/maps/DOOMTEST.wad \
-        +openmenu m8f_is_LevelsMenu \
+        +map map01 \
+        #+openmenu m8f_is_LevelsMenu \
         #-norun
