@@ -28,6 +28,7 @@ zip $name.pk3 \
     zscript/*.txt \
     *.txt \
     *.md \
+    language.enu \
 && \
 cp $name.pk3 $name-$(git describe --abbrev=0 --tags).pk3 \
 && \

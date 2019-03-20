@@ -28,7 +28,9 @@ class m8f_is_LevelsMenu : OptionMenu
         {
           reset(mDesc);
 
-          string label = commandItem.mLabel;
+          string label        = commandItem.mLabel;
+          string restartLabel = StringTable.Localize("$M8F_IS_RESTART");
+          string nextLabel    = StringTable.Localize("$M8F_IS_NEXT");
           string mapName;
 
           if (label == restartLabel)
@@ -150,6 +152,7 @@ class m8f_is_LevelsMenu : OptionMenu
     OptionMenuItem item;
     if (isSafe())
     {
+      string warning = StringTable.Localize("$M8F_IS_WARNING");
       item = new("OptionMenuItemSafeCommand").Init(label, command, warning);
     }
     else
@@ -167,11 +170,14 @@ class m8f_is_LevelsMenu : OptionMenu
 
   private void addInGameOptions(OptionMenuDescriptor desc)
   {
-    desc.mItems.push(new("OptionMenuItemCommand"    ).Init("Back To Game"     , "closemenu"));
+    string backLabel = StringTable.Localize("$M8F_IS_BACK");
+    desc.mItems.push(new("OptionMenuItemCommand").Init(backLabel, "closemenu"));
     addEmptyLine(desc);
 
+    string nextLabel = StringTable.Localize("$M8F_IS_NEXT");
     if (isSafe())
     {
+      string warning = StringTable.Localize("$M8F_IS_WARNING");
       desc.mItems.push(new("OptionMenuItemSafeCommand").Init(nextLabel , "nextmap", warning));
     }
     else
@@ -180,7 +186,8 @@ class m8f_is_LevelsMenu : OptionMenu
     }
     if (isKeepInventory())
     {
-      addStaticText(desc, "Inventory cannot be kept with next map command.");
+      string keepNote = StringTable.Localize("$M8F_IS_INV_KEEP_NOTE");
+      addStaticText(desc, keepNote);
       addEmptyLine(desc);
     }
 
@@ -188,6 +195,8 @@ class m8f_is_LevelsMenu : OptionMenu
                     ? String.Format("changemap *")
                     : String.Format("map *");
 
+    string restartLabel = StringTable.Localize("$M8F_IS_RESTART");
+    string warning      = StringTable.Localize("$M8F_IS_WARNING");
     if (isSafe())
     {
       desc.mItems.push(new("OptionMenuItemSafeCommand").Init(restartLabel, command , warning));
@@ -246,7 +255,7 @@ class m8f_is_LevelsMenu : OptionMenu
 
     addEmptyLine(desc);
     { // Time attack
-      string mapName     = "Time Attack Mode";
+      string mapName     = StringTable.Localize("$M8F_IS_AS_TIME_MODE");
       string mapLumpName = "dm01";
       string fullName    = "maps/dm01.wad";
       bool   isFound     = addGoToMapItemIfFound(mapLumpName, fullName, mapName, currentMap, desc);
@@ -357,11 +366,5 @@ class m8f_is_LevelsMenu : OptionMenu
 
     return isSafe;
   }
-
-  // private: //////////////////////////////////////////////////////////////////
-
-  const warning      = "Are you sure you want to go change level?\nYou'll lose all your weapons and ammo.";
-  const restartLabel = "Restart this Map";
-  const nextLabel    = "Next Map";
 
 } // class m8f_is_LevelsMenu

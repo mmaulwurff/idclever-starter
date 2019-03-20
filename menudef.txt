@@ -1,42 +1,42 @@
-OptionMenu "m8f_is_Menu"
+OptionMenu    "m8f_is_Menu"
 {
-  Title      "IDCLEVer Starter Options"
+  Title       "$M8F_IS_TITLE"
 
-  StaticText "Options take effect on level start," , "Black"
-  StaticText "and only if Pistol Start is on."     , "Black"
+  StaticText  "$M8F_IS_NOTE1"        , "Black"
+  StaticText  "$M8F_IS_NOTE2"        , "Black"
 
-  StaticText ""
-  Option     "Pistol Start", "m8f_wm_PistolStart", "OnOff"
+  StaticText  ""
+  Option      "$M8F_IS_PISTOL"       , "m8f_wm_PistolStart", "OnOff"
 
-  StaticText ""
-  TextField  "Initial ammo amount %", "m8f_is_StartAmmoPercent"
+  StaticText  ""
+  TextField   "$M8F_IS_INITIAL_AMMO" , "m8f_is_StartAmmoPercent"
 
-  StaticText ""
-  Option     "Start with the backpack", "m8f_is_StartWithBackpack", "OnOff"
+  StaticText  ""
+  Option      "$M8F_IS_BACKPACK"     , "m8f_is_StartWithBackpack", "OnOff"
 
-  StaticText ""
-  StaticText "Commands", 1
-  Control    "Keep this weapon"        , "m8f_keep_this_weapon"
-  Control    "Clear kept weapons list" , "m8f_clear_keep_weapons"
-  Control    "Open Level Menu"         , "m8f_open_level_menu"
+  StaticText  ""
+  StaticText  "$M8F_IS_COMMANDS"     , 1
+  Control     "$M8F_IS_KEEP_THIS"    , "m8f_keep_this_weapon"
+  Control     "$M8F_IS_CLEAR"        , "m8f_clear_keep_weapons"
+  Control     "$M8F_IS_OPEN_LEVEL"   , "m8f_open_level_menu"
 
-  StaticText ""
-  StaticText "Level Menu", 1
-  Option     "Level change prompt" , "m8f_is_safe_level_menu_commands" , "OnOff"
-  Option     "Keep inventory"      , "m8f_is_level_menu_keep"          , "OnOff"
+  StaticText  ""
+  StaticText  "$M8F_IS_LEVEL_TITLE"  , 1
+  Option      "$M8F_IS_PROMPT"       , "m8f_is_safe_level_menu_commands" , "OnOff"
+  Option      "$M8F_IS_KEEP_INV"     , "m8f_is_level_menu_keep"          , "OnOff"
 
-  StaticText ""
+  StaticText  ""
 }
 
 AddOptionMenu "OptionsMenu"
 {
-  StaticText ""
-  Submenu "IDCLEVer Starter Options" , "m8f_is_Menu"
-  SubMenu "Level Menu"               , "m8f_is_LevelsMenu"
+  StaticText  ""
+  Submenu     "$M8F_IS_TITLE"       , "m8f_is_Menu"
+  SubMenu     "$M8F_IS_LEVEL_TITLE" , "m8f_is_LevelsMenu"
 }
 
-OptionMenu "m8f_is_LevelsMenu"
+OptionMenu    "m8f_is_LevelsMenu"
 {
   Class       "m8f_is_LevelsMenu"
-  Title       "Level Menu"
+  Title       "$M8F_IS_LEVEL_TITLE"
 }
