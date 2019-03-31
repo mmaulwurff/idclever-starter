@@ -1,0 +1,31 @@
+[enu default]
+
+M8F_IS_TITLE         = "IDCLEVer Starter Options";
+M8F_IS_NOTE1         = "Options take effect on level start,";
+M8F_IS_NOTE2         = "and only if Pistol Start is on.";
+
+M8F_IS_PISTOL        = "Pistol Start";
+M8F_IS_INITIAL_AMMO  = "Initial ammo amount %";
+M8F_IS_BACKPACK      = "Start with the backpack";
+
+M8F_IS_COMMANDS      = "Commands";
+M8F_IS_KEEP_THIS     = "Keep this weapon";
+M8F_IS_CLEAR         = "Clear kept weapons list";
+M8F_IS_OPEN_LEVEL    = "Open Level Menu";
+
+M8F_IS_LEVEL_TITLE   = "Level Menu";
+M8F_IS_PROMPT        = "Level change prompt";
+M8F_IS_KEEP_INV      = "Keep inventory";
+M8F_IS_SHOW_NAME     = "Show level name";
+
+M8F_IS_KEEP_MESSAGE  = "%s will be kept on new level start.";
+M8F_IS_KEEP_CLEAR    = "Weapon keep list is cleared.";
+
+M8F_IS_BACK          = "Back to game";
+M8F_IS_NEXT          = "Next Map";
+M8F_IS_WARNING       = "Are you sure you want to go change level?\nYou'll lose all your weapons and ammo.";
+M8F_IS_RESTART       = "Restart this Map";
+
+M8F_IS_INV_KEEP_NOTE = "Inventory cannot be kept with next map command.";
+
+M8F_IS_AS_TIME_MODE  = "Time Attack Mode";

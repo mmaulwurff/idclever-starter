@@ -31,30 +31,7 @@ class m8f_is_LevelsMenu : OptionMenu
           string label        = commandItem.mLabel;
           string restartLabel = StringTable.Localize("$M8F_IS_RESTART");
           string nextLabel    = StringTable.Localize("$M8F_IS_NEXT");
-          string mapName;
-
-          if (label == restartLabel)
-          {
-            mapName = level.mapName;
-          }
-          else if (label == nextLabel)
-          {
-            if (level.nextMap.IndexOf("enDSeQ") == -1)
-            {
-              mapName = level.nextMap;
-            }
-            else
-            {
-              mapName = level.mapName;
-            }
-          }
-          else
-          {
-            int leftP  = label.RightIndexOf("(");
-            int rightP = label.RightIndexOf(")");
-
-            mapName = label.Mid(leftP + 1, rightP - leftP - 1);
-          }
+          string mapName      = makeMapName(label, restartLabel, nextLabel);
 
           setup(mDesc, mapName);
 
@@ -74,6 +51,39 @@ class m8f_is_LevelsMenu : OptionMenu
   }
 
   // private: //////////////////////////////////////////////////////////////////
+
+  private static string makeMapName(string label, string restartLabel, string nextLabel)
+  {
+    string mapName;
+
+    if (label == restartLabel)
+    {
+      mapName = level.mapName;
+    }
+    else if (label == nextLabel)
+    {
+      if (level.nextMap.IndexOf("enDSeQ") == -1)
+      {
+        mapName = level.nextMap;
+      }
+      else
+      {
+        mapName = level.mapName;
+      }
+    }
+    else
+    {
+      int  leftP    = label.RightIndexOf("(");
+      int  rightP   = label.RightIndexOf(")");
+      bool hasParen = (leftP != -1);
+
+      mapName = hasParen
+        ? label.Mid(leftP + 1, rightP - leftP - 1)
+        : label.left(label.length() - 2); // remove right padding
+    }
+
+    return mapName;
+  }
 
   private void addEmptyLine(OptionMenuDescriptor desc)
   {
@@ -117,7 +127,12 @@ class m8f_is_LevelsMenu : OptionMenu
   {
     string label;
 
-    if (mapName.CharAt(0) == "$")
+    if (!IsShowNames())
+    {
+      label = mapLumpName;
+    }
+
+    else if (mapName.CharAt(0) == "$")
     {
       string localized = StringTable.Localize(mapName);
 
@@ -135,6 +150,7 @@ class m8f_is_LevelsMenu : OptionMenu
       label = String.Format("%s (%s)", mapName, mapLumpName);
     }
 
+    console.printf("'%s' vs '%s'", currentMap, mapLumpName);
     if (currentMap.length() > 0 && isEqualIgnoreCase(currentMap, mapLumpName))
     {
       label.AppendFormat(" *");
@@ -319,7 +335,7 @@ class m8f_is_LevelsMenu : OptionMenu
     }
   }
 
-  private bool isDoom2MapsReplaced()
+  private static bool isDoom2MapsReplaced()
   {
     int maxNum = StringTable.Localize("$M8F_IS_ORIG_MAPS_END").ToInt();
 
@@ -334,7 +350,7 @@ class m8f_is_LevelsMenu : OptionMenu
     return false;
   }
 
-  private bool isHarmony()
+  private static bool isHarmony()
   {
     string map03Name = StringTable.Localize("$HUSTR_3");
     map03Name.toUpper();
@@ -343,14 +359,21 @@ class m8f_is_LevelsMenu : OptionMenu
     return isHarmony;
   }
 
-  private bool isKeepInventory()
+  private static bool isKeepInventory()
   {
     bool isKeepInventory = CVar.GetCvar("m8f_is_level_menu_keep").GetBool();
 
     return isKeepInventory;
   }
 
-  private bool isEqualIgnoreCase(string str1, string str2)
+  private static bool isShowNames()
+  {
+    bool isShowNames = CVar.GetCVar("m8f_is_show_name").GetBool();
+
+    return isShowNames;
+  }
+
+  private static bool isEqualIgnoreCase(string str1, string str2)
   {
     str1.toUpper();
     str2.toUpper();
@@ -360,7 +383,7 @@ class m8f_is_LevelsMenu : OptionMenu
     return isEqual;
   }
 
-  private bool isSafe()
+  private static bool isSafe()
   {
     bool isSafe = CVar.GetCVar("m8f_is_safe_level_menu_commands").GetBool();
 

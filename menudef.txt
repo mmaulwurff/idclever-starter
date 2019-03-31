@@ -24,6 +24,7 @@ OptionMenu    "m8f_is_Menu"
   StaticText  "$M8F_IS_LEVEL_TITLE"  , 1
   Option      "$M8F_IS_PROMPT"       , "m8f_is_safe_level_menu_commands" , "OnOff"
   Option      "$M8F_IS_KEEP_INV"     , "m8f_is_level_menu_keep"          , "OnOff"
+  Option      "$M8F_IS_SHOW_NAME"    , "m8f_is_show_name"                , "OnOff"
 
   StaticText  ""
 }

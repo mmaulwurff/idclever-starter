@@ -1,9 +1,14 @@
-user bool   m8f_wm_PistolStart       = true;
-user int    m8f_is_StartAmmoPercent  = 100;
-user bool   m8f_is_StartWithBackpack = false;
-user string m8f_is_KeepWeapons       = "";
+// User variables //////////////////////////////////////////////////////////////
 
-server bool m8f_is_safe_level_menu_commands = true;
+user   bool   m8f_wm_PistolStart       = true;
+user   int    m8f_is_StartAmmoPercent  = 100;
+user   bool   m8f_is_StartWithBackpack = false;
+user   string m8f_is_KeepWeapons       = "";
 
-server bool m8f_is_level_menu_keep = false;
-server bool m8f_is_inhibit = false;
+// Server variables ////////////////////////////////////////////////////////////
+
+server bool   m8f_is_safe_level_menu_commands = true;
+
+server bool   m8f_is_level_menu_keep = false;
+server bool   m8f_is_inhibit         = false;
+server bool   m8f_is_show_name       = true;
