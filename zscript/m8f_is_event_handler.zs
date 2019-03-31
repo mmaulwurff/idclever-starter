@@ -22,15 +22,17 @@ class m8f_is_EventHandler : StaticEventHandler
     }
 
     let playerPawn = PlayerPawn(players[e.PlayerNumber].mo);
-    ResetInventory  (playerPawn);
-    ResetWeapons    (playerPawn);
-    ResetAmmo       (playerPawn);
-    MaybeAddBackpack(playerPawn);
+
+    ResetHealthAndArmor(playerPawn);
+    ResetInventory     (playerPawn);
+    ResetWeapons       (playerPawn);
+    ResetAmmo          (playerPawn);
+    MaybeAddBackpack   (playerPawn);
   }
 
   override Void NetworkProcess(ConsoleEvent e)
   {
-    if(e.name == "keep_this_weapon")
+    if (e.name == "keep_this_weapon")
     {
       Weapon currentWeapon = players[e.player].ReadyWeapon;
       if (currentWeapon == null) { return; }
@@ -57,15 +59,43 @@ class m8f_is_EventHandler : StaticEventHandler
 
   // private: //////////////////////////////////////////////////////////////////
 
+  private static bool IsUltimateCustomDoomLoaded()
+  {
+    string        className = "cd_UltimateCustomDoom";
+    class<Object> cls       = className;
+    bool          isLoaded  = (cls != null);
+
+    return isLoaded;
+  }
+
+  private static void ResetHealthAndArmor(PlayerPawn player)
+  {
+    if (IsUltimateCustomDoomLoaded())
+    {
+      // rely on Ultimate Custom Doom instead.
+      return;
+    }
+
+    player.A_SetHealth(player.GetSpawnHealth());
+    player.SetInventory("BasicArmor", 0);
+  }
+
+  private bool ShouldRemoveItem(Inventory item)
+  {
+    bool   droppable     = !item.bUNDROPPABLE;
+    string className     = item.GetClassName();
+    bool   notInKeepList = !WeaponIsInKeepList(className);
+    bool   notArmor      = !(item is "BasicArmor" || item is "HexenArmor");
+
+    bool shouldRemove  = droppable && notInKeepList && notArmor;
+
+    return shouldRemove;
+  }
+
   /** resets health, armor, and droppable inventory items
    */
   private void ResetInventory(PlayerPawn player)
   {
-    // reset health and armor
-    player.A_SetHealth(player.GetSpawnHealth());
-    player.SetInventory("BasicArmor", 0);
-    player.SetInventory("HexenArmor", 1);
-
     // remove everything that is droppable
     Array<string> items;
     Array<int>    itemAmounts;
@@ -74,7 +104,7 @@ class m8f_is_EventHandler : StaticEventHandler
 
     for (let item = player.Inv; item; item = item.Inv)
     {
-      if(!item.bUNDROPPABLE && !WeaponIsInKeepList(item.GetClassName()))
+      if (ShouldRemoveItem(item))
       {
         items.push(item.GetClassName());
         itemAmounts.push(item.amount);
@@ -90,9 +120,9 @@ class m8f_is_EventHandler : StaticEventHandler
     DropItem drop = player.GetDropItems();
     if (drop != null)
     {
-      for(DropItem di = drop; di != null; di=di.Next)
+      for (DropItem di = drop; di != null; di=di.Next)
       {
-        if(di.Name == "None") { continue; }
+        if (di.Name == "None") { continue; }
 
         let weapon = (class<Weapon>)(di.Name);
         if (weapon != null) { continue; }
@@ -102,7 +132,7 @@ class m8f_is_EventHandler : StaticEventHandler
 
         let inv = (class<Inventory>)(di.Name);
 
-        if(inv != null)
+        if (inv != null)
         {
           player.A_SetInventory(di.Name, di.Amount);
         }
@@ -176,13 +206,13 @@ class m8f_is_EventHandler : StaticEventHandler
     string lastStartWeapon = ""; // to set default weapon
     if (drop != null)
     {
-      for(DropItem di = drop; di != null; di=di.Next)
+      for (DropItem di = drop; di != null; di=di.Next)
       {
-        if(di.Name == "None") { continue; }
+        if (di.Name == "None") { continue; }
 
         let weptype = (class<weapon>)(di.Name);
 
-        if(weptype != null)
+        if (weptype != null)
         {
           lastStartWeapon = di.Name;
           player.A_SetInventory(di.Name, di.Amount);
@@ -205,7 +235,7 @@ class m8f_is_EventHandler : StaticEventHandler
     Array<string> ammos;
     for (let item = player.Inv; item; item = item.Inv)
     {
-      if(item is "Ammo") { ammos.Push(item.GetClassName()); }
+      if (item is "Ammo") { ammos.Push(item.GetClassName()); }
     }
     // 2. Remove
     int size = ammos.Size();
@@ -217,7 +247,7 @@ class m8f_is_EventHandler : StaticEventHandler
     //If the player has any ammo in StartItem, set it here
     if (drop != null)
     {
-      for(DropItem di = drop; di != null; di = di.Next)
+      for (DropItem di = drop; di != null; di = di.Next)
       {
         if (di.Name == "None") { continue; }
 
