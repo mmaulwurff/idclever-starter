@@ -87,7 +87,7 @@ class m8f_is_EventHandler : StaticEventHandler
     bool   notInKeepList = !WeaponIsInKeepList(className);
     bool   notArmor      = !(item is "BasicArmor" || item is "HexenArmor");
 
-    bool shouldRemove  = droppable && notInKeepList && notArmor;
+    bool   shouldRemove  = droppable && notInKeepList && notArmor;
 
     return shouldRemove;
   }
@@ -98,7 +98,6 @@ class m8f_is_EventHandler : StaticEventHandler
   {
     // remove everything that is droppable
     Array<string> items;
-    Array<int>    itemAmounts;
 
     GetKeepWeapons(player.player);
 
@@ -107,13 +106,12 @@ class m8f_is_EventHandler : StaticEventHandler
       if (ShouldRemoveItem(item))
       {
         items.push(item.GetClassName());
-        itemAmounts.push(item.amount);
       }
     }
     int size = items.Size();
     for (int i = 0; i < size; ++i)
     {
-      player.A_TakeInventory(items[i], itemAmounts[i]);
+      player.A_TakeInventory(items[i]);
     }
 
     // Restore default things
@@ -170,6 +168,16 @@ class m8f_is_EventHandler : StaticEventHandler
     return false;
   }
 
+  private bool ShouldRemoveWeapon(string weaponClass)
+  {
+    bool inKeepList = !WeaponIsInKeepList(weaponClass);
+    bool holstered  = (weaponClass == "m8f_wm_Holstered");
+
+    bool shouldRemoveWeapon = !inKeepList && !holstered;
+
+    return shouldRemoveWeapon;
+  }
+
   /** resets weapons, even if they are undroppable
    * ammo should be reset after resetting weapons.
    */
@@ -188,7 +196,7 @@ class m8f_is_EventHandler : StaticEventHandler
       if (item is "Weapon")
       {
         string weaponClass = item.GetClassName();
-        if (!WeaponIsInKeepList(weaponClass))
+        if (ShouldRemoveWeapon(weaponClass))
         {
           weapons.push(weaponClass);
         }
@@ -254,7 +262,7 @@ class m8f_is_EventHandler : StaticEventHandler
         let ammotype = (class<ammo>)(di.Name);
         if (ammotype != null)
         {
-          player.A_SetInventory(di.Name, di.Amount * settings.ammoMultiplier);
+          player.A_SetInventory(di.Name, int(di.Amount * settings.ammoMultiplier));
         }
       }
     }
