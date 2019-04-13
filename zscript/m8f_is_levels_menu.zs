@@ -150,7 +150,6 @@ class m8f_is_LevelsMenu : OptionMenu
       label = String.Format("%s (%s)", mapName, mapLumpName);
     }
 
-    console.printf("'%s' vs '%s'", currentMap, mapLumpName);
     if (currentMap.length() > 0 && isEqualIgnoreCase(currentMap, mapLumpName))
     {
       label.AppendFormat(" *");

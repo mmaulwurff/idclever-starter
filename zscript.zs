@@ -2,7 +2,7 @@ version "3.2.0"
 
 /* MIT License
  *
- * Copyright (c) 2018 Alexander Kromm (mmaulwurff@gmail.com)
+ * Copyright (c) 2018-2019 Alexander Kromm (mmaulwurff@gmail.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
