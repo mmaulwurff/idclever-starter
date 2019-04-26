@@ -2,4 +2,4 @@
 
 M8F_IS_GAME          = "DOOM2";
 M8F_IS_EPISODE_CODE  = "$HUSTR_%d";
-M8F_IS_ORIG_MAPS_END = "1960"; // this may change in future versions of GZDoom.
+M8F_IS_ORIG_MAPS_END = "1920"; // this may change in future versions of GZDoom.
