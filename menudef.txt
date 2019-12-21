@@ -18,12 +18,9 @@ OptionMenu m8f_is_Menu
   StaticText  "$M8F_IS_COMMANDS"     , 1
   Control     "$M8F_IS_KEEP_THIS"    , m8f_keep_this_weapon
   Control     "$M8F_IS_CLEAR"        , m8f_clear_keep_weapons
-
-  StaticText  ""
 }
 
 AddOptionMenu OptionsMenu
 {
-  StaticText  ""
   Submenu     "$M8F_IS_TITLE"       , m8f_is_Menu
 }
