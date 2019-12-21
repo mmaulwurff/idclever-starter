@@ -1,22 +1,13 @@
 *
+!*/
+*/*
 
-!*.txt
-changelog.txt
-
-!*.md
-!*.sh
-!*.zs
-!language.*
 !.gitignore
+!.gitattributes
 
-!zscript
-zscript/*
-!zscript/*.zs
+!**.txt
+!**.md
+!**.sh
+!**.zs
 
-!filter/
-filter/*
-!filter/*/
-filter/*/*
-!filter/*/*.enu
-
-*~
+changelog.txt
