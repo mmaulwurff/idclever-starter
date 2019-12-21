@@ -5,21 +5,16 @@
 class m8f_is_EventHandler : StaticEventHandler
 {
 
-  override void PlayerEntered(PlayerEvent e)
+// public: // StaticEventHandler ///////////////////////////////////////////////
+
+  override
+  void PlayerEntered(PlayerEvent e)
   {
     if (IsTitleMap()) { return; }
 
-    PlayerInfo player = players[e.playerNumber];
-    settings = new("m8f_is_Settings").init(player);
+    settings = new("m8f_is_Settings").init();
 
     if (!settings.isEnabled) { return; }
-
-    let inhibitCVar = CVar.GetCVar("m8f_is_inhibit");
-    if (inhibitCVar.GetBool())
-    {
-      inhibitCVar.SetBool(false);
-      return;
-    }
 
     let playerPawn = PlayerPawn(players[e.PlayerNumber].mo);
 
@@ -30,36 +25,48 @@ class m8f_is_EventHandler : StaticEventHandler
     MaybeAddBackpack   (playerPawn);
   }
 
-  override Void NetworkProcess(ConsoleEvent e)
+  override
+  void NetworkProcess(ConsoleEvent e)
   {
     if (e.name == "keep_this_weapon")
     {
       Weapon currentWeapon = players[e.player].ReadyWeapon;
-      if (currentWeapon == null) { return; }
+      if (currentWeapon == null)
+      {
+        return;
+      }
+
       string currentWeaponClass = currentWeapon.GetClassName();
 
-      PlayerInfo player          = players[consolePlayer];
-      CVar       keepWeaponsCVar = CVar.GetCVar("m8f_is_KeepWeapons", player);
-      string     keeped          = keepWeaponsCVar.GetString();
-
-      keeped.AppendFormat("%s,", currentWeaponClass);
-      keepWeaponsCVar.SetString(keeped);
+      Array<String> keepWeapons;
+      GetKeepWeapons(keepWeapons);
 
       string message = StringTable.Localize("$M8F_IS_KEEP_MESSAGE");
       Console.Printf(message, currentWeapon.GetTag());
+
+      if (WeaponIsInKeepList(keepWeapons, currentWeaponClass))
+      {
+        return;
+      }
+
+      CVar   keepWeaponsCVar = CVar.GetCVar("m8f_is_KeepWeapons");
+      String keeped          = keepWeaponsCvar.GetString();
+
+      keeped.AppendFormat("%s,", currentWeaponClass);
+      keepWeaponsCVar.SetString(keeped);
     }
     else if (e.name == "clear_keep_weapons")
     {
-      PlayerInfo player = players[consolePlayer];
-      CVar.GetCVar("m8f_is_KeepWeapons", player).SetString("");
+      CVar.GetCVar("m8f_is_KeepWeapons").SetString("");
       string message = StringTable.Localize("$M8F_IS_KEEP_CLEAR");
       Console.Printf(message);
     }
   }
 
-  // private: //////////////////////////////////////////////////////////////////
+// private: //////////////////////////////////////////////////////////////////
 
-  private static bool IsUltimateCustomDoomLoaded()
+  private static
+  bool IsUltimateCustomDoomLoaded()
   {
     string        className = "cd_UltimateCustomDoom";
     class<Object> cls       = className;
@@ -68,7 +75,8 @@ class m8f_is_EventHandler : StaticEventHandler
     return isLoaded;
   }
 
-  private static void ResetHealthAndArmor(PlayerPawn player)
+  private static
+  void ResetHealthAndArmor(PlayerPawn player)
   {
     if (IsUltimateCustomDoomLoaded())
     {
@@ -80,11 +88,12 @@ class m8f_is_EventHandler : StaticEventHandler
     player.SetInventory("BasicArmor", 0);
   }
 
-  private bool ShouldRemoveItem(Inventory item)
+  private
+  bool ShouldRemoveItem(Array<String> keepWeapons, Inventory item)
   {
     bool   droppable     = !item.bUNDROPPABLE;
     string className     = item.GetClassName();
-    bool   notInKeepList = !WeaponIsInKeepList(className);
+    bool   notInKeepList = !WeaponIsInKeepList(keepWeapons, className);
     bool   notArmor      = !(item is "BasicArmor" || item is "HexenArmor");
 
     bool   shouldRemove  = droppable && notInKeepList && notArmor;
@@ -92,18 +101,20 @@ class m8f_is_EventHandler : StaticEventHandler
     return shouldRemove;
   }
 
-  /** resets health, armor, and droppable inventory items
+  /**
+   * Resets health, armor, and droppable inventory items.
    */
-  private void ResetInventory(PlayerPawn player)
+  private
+  void ResetInventory(PlayerPawn player)
   {
     // remove everything that is droppable
-    Array<string> items;
-
-    GetKeepWeapons(player.player);
+    Array<String> items;
+    Array<String> keepWeapons;
+    GetKeepWeapons(keepWeapons);
 
     for (let item = player.Inv; item; item = item.Inv)
     {
-      if (ShouldRemoveItem(item))
+      if (ShouldRemoveItem(keepWeapons, item))
       {
         items.push(item.GetClassName());
       }
@@ -138,39 +149,24 @@ class m8f_is_EventHandler : StaticEventHandler
     }
   }
 
-  private void GetKeepWeapons(PlayerInfo player)
+  private
+  void GetKeepWeapons(out Array<String> keepWeapons)
   {
     keepWeapons.Clear();
-
-    string weaponsSerialized = CVar.GetCVar("m8f_is_KeepWeapons", player).GetString();
-    int    size              = weaponsSerialized.length();
-    string currentWeapon     = "";
-
-    for (int i = 0; i < size; ++i)
-    {
-      currentWeapon = "";
-      while (weaponsSerialized.CharAt(i) != ',' && i < size)
-      {
-        currentWeapon.AppendFormat("%c", weaponsSerialized.CharCodeAt(i));
-        ++i;
-      }
-      keepWeapons.Push(currentWeapon);
-    }
+    CVar.GetCVar("m8f_is_KeepWeapons").GetString().Split(keepWeapons, ",", TOK_SKIPEMPTY);
   }
 
-  private bool WeaponIsInKeepList(string weaponClass)
+  private
+  bool WeaponIsInKeepList(Array<String> keepWeapons, String weaponClass)
   {
-    int size = keepWeapons.size();
-    for (int i = 0; i < size; ++i)
-    {
-      if (weaponClass == keepWeapons[i]) { return true; }
-    }
-    return false;
+    uint index = keepWeapons.Find(weaponClass);
+    return index != keepWeapons.size();
   }
 
-  private bool ShouldRemoveWeapon(string weaponClass)
+  private
+  bool ShouldRemoveWeapon(Array<String> keepWeapons, string weaponClass)
   {
-    bool inKeepList = !WeaponIsInKeepList(weaponClass);
+    bool inKeepList = WeaponIsInKeepList(keepWeapons, weaponClass);
     bool holstered  = (weaponClass == "m8f_wm_Holstered");
 
     bool shouldRemoveWeapon = !inKeepList && !holstered;
@@ -178,25 +174,28 @@ class m8f_is_EventHandler : StaticEventHandler
     return shouldRemoveWeapon;
   }
 
-  /** resets weapons, even if they are undroppable
-   * ammo should be reset after resetting weapons.
+  /**
+   * Resets weapons, even if they are undroppable.
+   * Ammo should be reset after resetting weapons.
    */
-  private void ResetWeapons(PlayerPawn player)
+  private
+  void ResetWeapons(PlayerPawn player)
   {
     DropItem drop = player.GetDropItems();
 
-    GetKeepWeapons(player.player);
+    Array<String> keepWeapons;
+    GetKeepWeapons(keepWeapons);
 
     // remove weapons even if they are undroppable
     // removing an item invalidates the iterator, so
     // 1. remember weapon classes
-    Array<string> weapons;
+    Array<String> weapons;
     for (let item = player.Inv; item; item = item.Inv)
     {
       if (item is "Weapon")
       {
         string weaponClass = item.GetClassName();
-        if (ShouldRemoveWeapon(weaponClass))
+        if (ShouldRemoveWeapon(keepWeapons, weaponClass))
         {
           weapons.push(weaponClass);
         }
@@ -234,7 +233,8 @@ class m8f_is_EventHandler : StaticEventHandler
     }
   }
 
-  private void ResetAmmo(PlayerPawn player)
+  private
+  void ResetAmmo(PlayerPawn player)
   {
     DropItem drop = player.GetDropItems();
 
@@ -268,22 +268,22 @@ class m8f_is_EventHandler : StaticEventHandler
     }
   }
 
-  private void MaybeAddBackpack(PlayerPawn player)
+  private
+  void MaybeAddBackpack(PlayerPawn player)
   {
     if (!settings.startWithBackpack) { return; }
 
     player.GiveInventoryType("BackpackItem");
   }
 
-  private static bool IsTitlemap()
+  private static
+  bool IsTitlemap()
   {
     bool isTitlemap = (level.mapname == "TITLEMAP");
     return isTitlemap;
   }
 
-  // private: //////////////////////////////////////////////////////////////////
-
-  private Array<string> keepWeapons;
+// private: ////////////////////////////////////////////////////////////////////
 
   private m8f_is_Settings settings;
 
