@@ -252,7 +252,7 @@ class m8f_is_EventHandler : StaticEventHandler
     if (lastStartWeapon != "")
     {
       let weaponInInv = player.FindInventory(lastStartWeapon);
-      player.UseInventory(weaponInInv);
+      if (weaponInInv) player.UseInventory(weaponInInv);
     }
   }
 
