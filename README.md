@@ -1,4 +1,10 @@
 # IDCLEVer Starter
+
+**Discontinued**. Consider alternatives:
+- [Always Pistol Start](https://jp.itch.io/doom-pistol-start) by JP LeBreton;
+- [Universal Pistol Start](https://forum.zdoom.org/viewtopic.php?f=43&t=71333) by DevilBlackDeath;
+- [Inventory Keeper](https://forum.zdoom.org/viewtopic.php?f=43&t=71364) by DevilBlackDeath.
+
 Universal mod for forced pistol starts.
 It should work for every IWAD, and for every mod.
 
